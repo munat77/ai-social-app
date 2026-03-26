@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Social Media Caption Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-gradient: linear-gradient(90deg, #685EF6 0%, #F857A6 80%);
+      --primary: #685ef6;
+      --secondary: #f857a6;
+      --hashtag-bg: #ede3f7;
+      --hashtag-color: #7c57b6;
+      --bg: #f9fafc;
+      --card-bg: #fff;
+      --card-glow: 0 12px 52px -10px rgba(110,92,255,0.09),0 2.5px 9px 0 rgba(248,87,166,0.12);
+      --border: #edeff7;
+      --input-bg: #f5f5fc;
+      --input-border: #eeebfa;
+      --input-focus: #685ef6;
+      --text-main: #232536;
+      --text-label: #8483a3;
+      --shadow-btn: 0 6px 22px -2px rgba(110,92,255,0.10);
+      --anim: cubic-bezier(.45,0,.55,1);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--text-main);
+    }
+    body {
+      animation: bgfadein 1.4s var(--anim);
+    }
+    @keyframes bgfadein {
+      from { background: #ede3f6; }
+      to { background: var(--bg); }
+    }
+    .container {
+      max-width: 440px;
+      margin: 58px auto 0;
+      background: var(--card-bg);
+      border-radius: 22px;
+      box-shadow: var(--card-glow);
+      padding: 2.7rem 2.2rem 2rem 2.2rem;
+      backdrop-filter: blur(2.5px);
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+      position: relative;
+      animation: cardenter .9s var(--anim) 0s 1 both;
+    }
+    @keyframes cardenter {
+      from { opacity: 0; transform: translateY(24px) scale(.98);}
+      to { opacity: 1; transform: none; }
+    }
+    .container h1 {
+      font-size: 2.15rem;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.001em;
+      text-align: center;
+      margin: 0 0 3px;
+      animation: word-fadein 1.2s var(--anim);
+    }
+    @keyframes word-fadein {
+      from { opacity: 0; letter-spacing: 0.12em;}
+      to   { opacity: 1; }
+    }
+    label {
+      font-size: 1.06rem;
+      color: var(--text-label);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+      transition: color .25s;
+    }
+    input[type="text"], input[type="password"], select {
+      width: 100%;
+      margin-bottom: 2px;
+      border: 1.3px solid var(--input-border);
+      border-radius: 10px;
+      background: var(--input-bg);
+      padding: 0.93rem 1rem;
+      font-size: 1.09rem;
+      font-family: inherit;
+      color: var(--text-main);
+      caret-color: var(--primary);
+      transition: border .21s, box-shadow .21s, background .14s;
+      outline: none;
+      box-shadow: none;
+      appearance: none;
+    }
+    input[type="text"]:focus, input[type="password"]:focus, select:focus {
+      border-color: var(--input-focus);
+      background: #f6f5fd;
+      box-shadow: 0 3px 13px -3px #807cf844;
+    }
+    input[type="text"]:disabled, select:disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    .input-group {
+      margin-bottom: 2px;
+      animation: inputfade 1s var(--anim);
+    }
+    @keyframes inputfade {
+      from { opacity:0; transform:translateY(22px);}
+      to   { opacity:1; transform:none;}
+    }
+    button {
+      background: var(--primary-gradient);
+      color: #fff;
+      padding: 1rem 1.2rem;
+      font-size: 1.17rem;
+      font-family: inherit;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.010em;
+      box-shadow: var(--shadow-btn);
+      margin-top: 10px;
+      transition: background .16s,box-shadow .13s,transform .13s;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    button::before {
+      content:'';
+      position:absolute;
+      pointer-events:none;
+      z-index: 0;
+      inset: 0;
+      opacity: 0.13;
+      background: linear-gradient(120deg, #f857a6 15%, #685ef6 84%);
+      transition: opacity .28s;
+      border-radius: 13px;
+    }
+    button:hover, button:focus-visible {
+      box-shadow: 0 11px 36px -4px #b788e966;
+      transform: translateY(-2px) scale(1.012);
+    }
+    button:active::before {
+      opacity: 0.28;
+    }
+    .result-box {
+      background: linear-gradient(110deg, #f9fcff 78%, #f4e3fc 100%);
+      border: 1.4px solid var(--input-border);
+      border-radius: 12px;
+      min-height: 66px;
+      padding: 1.22rem 1rem;
+      font-size: 1.13rem;
+      color: var(--text-main);
+      margin-top: 10px;
+      word-break: break-word;
+      letter-spacing: .004em;
+      box-shadow: 0 2px 10px rgba(110,92,255,0.07);
+      animation: resultfade .9s var(--anim);
+      transition: border .2s, box-shadow .18s;
+      user-select: text;
+      position: relative;
+      overflow: hidden;
+      z-index: 2;
+    }
+    .result-box.empty {
+      color: #b9b6d3;
+    }
+    .api-key-input {
+      margin-bottom: 7px;
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+    }
+    .api-key-input input {
+      flex: 1;
+      background: var(--input-bg);
+      border: 1.3px solid var(--input-border);
+      border-radius: 9px;
+      font-size: 1.01rem;
+      color: var(--text-main);
+      opacity: 0.88;
+      transition: border .22s;
+      padding-top: 0.78rem;
+      padding-bottom: 0.78rem;
+    }
+    .api-key-input label {
+      margin-bottom: 0;
+      color: #ac9bc9;
+      font-weight: 400;
+      font-size: 0.97rem;
+      letter-spacing: .002em;
+      padding-right: 2px;
+    }
+    .loading {
+      color: var(--primary);
+      background: linear-gradient(90deg,#685ef6 20%,#f857a6 80%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-style: italic;
+      font-size: 1.11rem;
+      letter-spacing: .01em;
+      animation: blink 1.08s steps(2, start) infinite;
+      font-weight: 700;
+    }
+    @keyframes blink {
+      to { opacity: .52; }
+    }
+    @keyframes resultfade {
+      from { opacity: 0; transform: scale(0.97) translateY(18px);}
+      to   { opacity:1; transform: none;}
+    }
+    /* Nice fade-in for api key + result area */
+    .result-box:not(.empty) {
+      animation: popResult .44s var(--anim) 1;
+      box-shadow: 0 4px 22px -4px #f857a615;
+    }
+    @keyframes popResult {
+      0% { opacity:0; transform: scale(.96) translateY(11px);}
+      55%{ opacity:.9; }
+      100%{ opacity:1; transform: none;}
+    }
+    .copy-btn {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: rgb(255,255,255,0.72);
+      border: none;
+      padding: 6px 11px;
+      font-size: 0.97rem;
+      color: var(--primary);
+      border-radius: 7px;
+      font-weight: 500;
+      outline: none;
+      cursor: pointer;
+      z-index: 9;
+      box-shadow: 0 1.5px 6px #685ef610;
+      opacity: 0;
+      transition: opacity .19s;
+      pointer-events: none;
+    }
+    .result-box:not(.empty):hover .copy-btn,
+    .result-box:not(.empty):focus-within .copy-btn {
+      opacity: 1;
+      pointer-events: initial;
+    }
+    .copy-btn.copied {
+      color: var(--secondary);
+      background: #fff0fa;
+      font-weight: 700;
+      opacity: 1;
+      animation: popCopy .5s var(--anim);
+    }
+    @keyframes popCopy {
+      0% { transform:scale(.96);}
+      75%{ transform:scale(1.09);}
+      100%{ transform:scale(1);}
+    }
+
+    /* Hashtag Generator Styles */
+    .hashtag-section {
+      margin-top: 20px;
+      background: linear-gradient(105deg, #f7eafd 80%, #eaf7fd 100%);
+      border: 1.1px solid var(--input-border);
+      border-radius: 11px;
+      box-shadow: 0 3px 13px -4px #8376ff13;
+      min-height: 40px;
+      padding: 1rem 1rem .7rem 1rem;
+      position: relative;
+      animation: hashtagfade .9s var(--anim);
+      transition: border .2s, box-shadow .18s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      overflow: hidden;
+    }
+    @keyframes hashtagfade {
+      from { opacity:0; transform: scale(.96) translateY(15px);}
+      to   { opacity:1; transform:none;}
+    }
+    .hashtag-section .hashtag-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-label);
+      margin: 0 0 7px 0;
+      letter-spacing: .012em;
+      text-shadow: 0 1px 0 #faf8ffba;
+      user-select: none;
+      pointer-events: none;
+    }
+    .hashtag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.47rem 0.33rem;
+      margin-top: -2px;
+    }
+    .hashtag {
+      display: inline-block;
+      background: var(--hashtag-bg);
+      color: var(--hashtag-color);
+      border-radius: 7px;
+      padding: 4px 14px 4px 10px;
+      font-size: 1.04rem;
+      font-weight: 600;
+      letter-spacing: .012em;
+      margin: 2px 2px 2px 0;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      transition: background .18s, color .18s, box-shadow .17s, transform .15s;
+      box-shadow: 0 2px 5px #ac7ff215;
+      user-select: text;
+      position: relative;
+    }
+    .hashtag:hover,
+    .hashtag:focus-visible {
+      background: var(--primary-gradient);
+      color: #fff;
+      transform: scale(1.06);
+    }
+    .hashtags-loading {
+      color: var(--primary);
+      font-size: 1.04rem;
+      font-style: italic;
+      opacity: 0.85;
+      animation: blink .98s steps(2, start) infinite;
+      margin-bottom: 2px;
+    }
+    .hashtag-copy-btn {
+      background: #ece5fc;
+      color: var(--primary);
+      font-weight: 600;
+      border: none;
+      border-radius: 7px;
+      padding: 6px 16px;
+      margin-top: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .12s, color .14s;
+      box-shadow: 0 1.5px 6px #685ef610;
+      outline: none;
+      margin-left: auto;
+      margin-right: 0;
+      display: block;
+    }
+    .hashtag-copy-btn.copied {
+      background: #f6e1fb;
+      color: var(--secondary);
+      animation: popCopy .5s var(--anim);
+    }
+    @media (max-width: 520px) {
+      .container {
+        padding: 1.15rem 0.58rem 1rem 0.58rem;
+        max-width: 98vw;
+      }
+      .result-box {
+        padding: 0.8rem 0.6rem;
+      }
+      .copy-btn {
+        right: 8px;
+        top: 6px;
+      }
+      .hashtag-section {
+        padding: 0.7rem 0.46rem 0.53rem 0.46rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Caption Generator</h1>
+    <form id="caption-form" autocomplete="off">
+      <div class="api-key-input input-group">
+        <label for="api-key" title="Your OpenAI API Key (never stored)">API Key:</label>
+        <input type="password" placeholder="sk-..." id="api-key" autocomplete="off" required />
+      </div>
+      <div class="input-group">
+        <label for="topic-input">What's the topic?</label>
+        <input type="text" id="topic-input" placeholder="e.g. Summer Vacation" maxlength="80" required />
+      </div>
+      <div class="input-group">
+        <label for="platform-select">Platform</label>
+        <select id="platform-select" required>
+          <option value="Instagram">Instagram</option>
+          <option value="TikTok">TikTok</option>
+          <option value="Twitter">Twitter (X)</option>
+        </select>
+      </div>
+      <button type="submit">
+        <span id="gen-btn-text">Generate Caption</span>
+        <span id="btn-spinner" style="margin-left:9px;display:none;">
+          <svg width="19" height="19" viewBox="0 0 50 50" fill="none">
+            <circle cx="25" cy="25" r="20" stroke="#685ef6" stroke-width="5" stroke-linecap="round" opacity="0.22"/>
+            <path d="M45 25a20 20 0 0 1-4.6 12.8" stroke="url(#g)" stroke-width="5" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="g" x1="49" y1="25" x2="12" y2="49" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#685ef6"/><stop offset="1" stop-color="#f857a6"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+      </button>
+    </form>
+    <div id="result" class="result-box empty" tabindex="0" aria-live="polite">
+      Your generated caption will appear here.
+      <button class="copy-btn" id="copy-btn" title="Copy to clipboard" tabindex="-1">Copy</button>
+    </div>
+    <div id="hashtags-section" class="hashtag-section" style="display: none;">
+      <span class="hashtag-title">Suggested Hashtags</span>
+      <div class="hashtag-list" id="hashtag-list"></div>
+      <button id="hashtag-copy-btn" class="hashtag-copy-btn" style="display:none;">Copy All</button>
+    </div>
+  </div>
+  <script>
+    const form = document.getElementById('caption-form');
+    const topicInput = document.getElementById('topic-input');
+    const platformSelect = document.getElementById('platform-select');
+    const apiKeyInput = document.getElementById('api-key');
+    const resultBox = document.getElementById('result');
+    const copyBtn = document.getElementById('copy-btn');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const btnText = document.getElementById('gen-btn-text');
+    // Hashtag generator elements
+    const hashtagsSection = document.getElementById('hashtags-section');
+    const hashtagList = document.getElementById('hashtag-list');
+    const hashtagCopyBtn = document.getElementById('hashtag-copy-btn');
+
+    function setLoadingState(loading) {
+      if (loading) {
+        btnSpinner.style.display = "inline-block";
+        btnText.textContent = "Generating...";
+        form.querySelectorAll("input, select, button").forEach(i => (i.disabled = true));
+      } else {
+        btnSpinner.style.display = "none";
+        btnText.textContent = "Generate Caption";
+        form.querySelectorAll("input, select, button").forEach(i => (i.disabled = false));
+      }
+    }
+
+    async function generateWithOpenAI(topic, platform, apiKey) {
+      let platformDisplay = platform;
+      if (platform === "Twitter (X)") platformDisplay = "Twitter";
+      const prompt =
+        `Write a catchy and modern social media caption about "${topic}" for ${platformDisplay}. ` +
+        `Keep it short and super engaging, use relevant, modern emojis, and include energetic, popular hashtags (no #ad). Match the vibe/style of ${platformDisplay}. Only write the post, nothing else.`;
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a vibrant, contemporary social media caption assistant. Format the result as a one-paragraph, modern post." },
+            { role: "user", content: prompt }
+          ],
+          max_tokens: 75,
+          temperature: 1.08,
+          n: 1,
+        })
+      });
+
+      if (!response.ok) {
+        let errorText = "Failed to connect to OpenAI API.";
+        try {
+          const err = await response.json();
+          if (err.error && err.error.message) errorText += " " + err.error.message;
+        } catch {}
+        throw new Error(errorText);
+      }
+
+      const data = await response.json();
+      let caption = data.choices && data.choices[0] && data.choices[0].message
+                      ? data.choices[0].message.content.trim()
+                      : "";
+      return caption;
+    }
+
+    // Hashtag Generator:
+    async function generateHashtags(topic, platform, apiKey) {
+      let platformDisplay = platform;
+      if (platform === "Twitter (X)") platformDisplay = "Twitter";
+      // Request: only hashtags, no caption, comma-separated
+      const hashtagPrompt =
+        `Suggest 8 of the most popular, energetic and relevant hashtags for a social media post about "${topic}" on ${platformDisplay}. ` +
+        `Do NOT include #ad or any promotional hashtags. Only give the list of hashtags, comma-separated, don't number them, and ensure all start with #.`;
+
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [
+            { role: "system", content: "You are a social media hashtag assistant. Only respond with 8 relevant, modern hashtags as a single comma-separated list." },
+            { role: "user", content: hashtagPrompt }
+          ],
+          max_tokens: 40,
+          temperature: 1.15,
+          n: 1,
+        })
+      });
+
+      if (!response.ok) {
+        let errorText = "Failed to get hashtags.";
+        try {
+          const err = await response.json();
+          if (err.error && err.error.message) errorText += " " + err.error.message;
+        } catch {}
+        throw new Error(errorText);
+      }
+      const data = await response.json();
+      let hashtagsRaw = data.choices?.[0]?.message?.content ?? "";
+      // Extract hashtags: allow both comma and newlines/semicolon
+      let hashtags = hashtagsRaw
+        .replace(/\n|\r/g, "")
+        .split(/[,;]+/)
+        .map(h => h.trim())
+        .filter(h=>/^#[\w\d\-]+$/.test(h));
+      // fallback: split by space also if all else fails
+      if (hashtags.length < 3) {
+        hashtags = hashtagsRaw.split(/\s+/).filter(t => t.startsWith("#"));
+      }
+      // remove duplicates (rare)
+      hashtags = [...new Set(hashtags)].slice(0, 10);
+      return hashtags;
+    }
+
+    function resetHashtagSection() {
+      hashtagsSection.style.display = "none";
+      hashtagList.innerHTML = "";
+      hashtagCopyBtn.style.display = "none";
+      hashtagCopyBtn.classList.remove("copied");
+      hashtagCopyBtn.textContent = "Copy All";
+    }
+
+    function showHashtagLoading() {
+      hashtagsSection.style.display = "block";
+      hashtagList.innerHTML = '<span class="hashtags-loading">Generating hashtags...</span>';
+      hashtagCopyBtn.style.display = "none";
+    }
+
+    function showHashtagError(msg) {
+      hashtagList.innerHTML = `<span class="hashtags-loading" style="color: #f857a6;opacity:0.74;">${msg}</span>`;
+      hashtagCopyBtn.style.display = "none";
+    }
+
+    function renderHashtags(words) {
+      if (!Array.isArray(words) || !words.length) {
+        showHashtagError("No hashtags generated.");
+        return;
+      }
+      hashtagList.innerHTML = "";
+      words.forEach(hashtag => {
+        const tag = document.createElement("button");
+        tag.type = "button";
+        tag.className = "hashtag";
+        tag.textContent = hashtag;
+        tag.title = "Copy hashtag";
+        tag.onclick = (e) => {
+          // Copy individual hashtag to clipboard
+          navigator.clipboard.writeText(hashtag).then(() => {
+            tag.classList.add("copied");
+            tag.textContent = "Copied!";
+            setTimeout(() => {
+              tag.textContent = hashtag;
+              tag.classList.remove("copied");
+            }, 1200);
+          });
+        };
+        hashtagList.appendChild(tag);
+      });
+      hashtagCopyBtn.style.display = "block";
+      hashtagCopyBtn.disabled = false;
+    }
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const topic = topicInput.value.trim();
+      const platform = platformSelect.value;
+      const apiKey = apiKeyInput.value.trim();
+      resultBox.classList.remove('empty');
+      copyBtn.style.opacity = 0;
+      copyBtn.tabIndex = -1;
+
+      resetHashtagSection();
+
+      if (!apiKey) {
+        resultBox.textContent = "Please enter your OpenAI API key.";
+        resetHashtagSection();
+        return;
+      }
+      if (!topic) {
+        resultBox.textContent = "Please enter a topic.";
+        resetHashtagSection();
+        return;
+      }
+
+      resultBox.textContent = "Generating caption...";
+      resultBox.classList.add('loading');
+      setLoadingState(true);
+      try {
+        const [caption, hashtags] = await Promise.all([
+          generateWithOpenAI(topic, platform, apiKey),
+          (async () => {
+            showHashtagLoading();
+            try {
+              const hashtags = await generateHashtags(topic, platform, apiKey);
+              renderHashtags(hashtags);
+            } catch (e) {
+              showHashtagError(e.message || "Failed to get hashtags.");
+            }
+            return null;
+          })()
+        ]);
+        if (!caption) {
+          resultBox.textContent = "Sorry, something went wrong. No caption generated.";
+          resultBox.classList.remove('loading');
+        } else {
+          // Put copy button
+          resultBox.innerHTML = `<span>${caption.replace(/\n/g, "<br>")}</span>`;
+          resultBox.appendChild(copyBtn);
+          copyBtn.style.opacity = 0.4;
+          copyBtn.tabIndex = 0;
+          setTimeout(() => {
+            copyBtn.style.opacity = 1;
+          }, 260);
+        }
+      } catch (err) {
+        resultBox.textContent = err.message || "Oops. Could not generate caption.";
+        resetHashtagSection();
+      }
+      setLoadingState(false);
+      resultBox.classList.remove('loading');
+      resultBox.classList.remove('empty');
+      // At this point, hashtags UI is auto-populated within generateHashtags
+    });
+
+    // Copy caption to clipboard logic
+    copyBtn.addEventListener('click', function() {
+      const text = resultBox.querySelector('span')?.textContent ?? '';
+      if (!text || resultBox.classList.contains('empty')) return;
+      navigator.clipboard.writeText(text).then(() => {
+        copyBtn.textContent = "Copied!";
+        copyBtn.classList.add("copied");
+        setTimeout(() => {
+          copyBtn.textContent = "Copy";
+          copyBtn.classList.remove("copied");
+        }, 1400);
+      });
+    });
+
+    // Ensure copy on keyboard nav for accessibility
+    resultBox.addEventListener('keydown', e => {
+      if (e.ctrlKey && (e.key === 'c' || e.key === 'C')) {
+        copyBtn.click();
+      }
+    });
+
+    // Copy all hashtags to clipboard
+    hashtagCopyBtn.addEventListener('click', function() {
+      const tags = Array.from(hashtagList.querySelectorAll('.hashtag')).map(h => h.textContent).filter(Boolean);
+      if (!tags.length) return;
+      navigator.clipboard.writeText(tags.join(' ')).then(() => {
+        hashtagCopyBtn.textContent = "Copied!";
+        hashtagCopyBtn.classList.add("copied");
+        setTimeout(() => {
+          hashtagCopyBtn.textContent = "Copy All";
+          hashtagCopyBtn.classList.remove("copied");
+        }, 1200);
+      });
+    });
+  </script>
+</body>
+<script>
+  // Simulate AI caption generation based on topic and platform
+  async function generateCaption(topic, platform) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Basic simulation logic
+        const platformVibes = {
+          "Instagram": "📸✨",
+          "Twitter (X)": "🔥🐦",
+          "LinkedIn": "💼🚀",
+          "TikTok": "🎵🌟",
+          "Facebook": "👍😊",
+          "YouTube": "▶️🎥"
+        };
+        const hashtags = [
+          "#Trending", "#Inspo", "#Now", "#Viral", "#MustSee", "#Cool", "#Fresh", "#Share"
+        ];
+        const emoji = platformVibes[platform] || "🌟";
+        const shortTopic = topic.length > 30 ? topic.slice(0, 28) + "…" : topic;
+
+        resolve(
+          `${emoji} ${shortTopic} ${emoji} — Let’s vibe! ${hashtags.slice(0,3).join(" ")}`
+        );
+      }, 800);
+    });
+  }
+
+  // Simulate AI hashtag suggestion
+  async function generateHashtags(topic, platform) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const popularTags = [
+          "#NowTrending", "#Inspiration", "#LifeHacks", "#FunTimes", "#SocialVibes", "#DailyShare", "#MustSee", "#Explore"
+        ];
+        // Shuffle and theme the tags
+        const tags = popularTags.sort(() => 0.5 - Math.random()).slice(0, 8);
+        resolve(tags);
+      }, 400);
+    });
+  }
+</script>
+</html>
